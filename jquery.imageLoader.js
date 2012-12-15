@@ -1,65 +1,57 @@
 (function($){
 	$.fn.imageLoader = function(options) {
-		var defaults = {
-			digits: 3,
-			format: ".png",
-			numOfImages: 10,
-			path: "images/",
-			prefix: "",
-			postfix: ""
+		var settings = {
+			altText: "",
+			format: ".jpg",
+			html5: false,
+			imageTotal: 10,
+			minDigits: 1,
+			namespace: "imageLoader",
+			path: "images/",	//from containing page
+			prefixText: "",
+			postfixText: "",
+			startingIndex: 1,
+			wrap:true
 		};
 
-		var options = $.extend(defaults, options);
-		options.path = options.path + options.prefix;
-		options.postfix = options.postfix + options.format;
+		settings = $.extend(settings, options);
+		settings.pathStart = settings.path + settings.prefixText;
+		settings.pathEnd = settings.postfixText + settings.format;
 	
 		return this.each(function() {
-			var x = 1;
 			obj = $(this);
 		
-			while(x <= options.numOfImages){
-				if(x == 1)
-					obj.append('<li><img alt="" class="current thumb" src="' + options.path + padZeros(x, options.digits) + options.postfix + '" /></li>');
-				else
-					obj.append('<li><img alt="" class="thumb" src="' + options.path + padZeros(x, options.digits) + options.postfix + '" /></li>');
-					
-				x++;
+			for(var i = settings.startingIndex; i <= settings.imageTotal; i++){
+				var toAppend;
+				
+				toAppend = '<img alt="' + settings.altText + '" class="';
+				
+				//if first image add current class
+				if(i == settings.startingIndex){
+					toAppend += settings.namespace + '-current ';
+				}
+				
+				toAppend += settings.namespace + '-thumb" src="' + settings.pathStart + 
+					padZeros(i, settings.minDigits) + settings.pathEnd + '"';
+				
+				//end image tag for html5 or 4.01 strict
+				if(settings.html5){
+					toAppend += " />";
+				}else{
+					toAppend += '>';
+				}
+				
+				//wrap images in li tag if enabled
+				if(settings.wrap){
+					toAppend = "<li>" + toAppend + "</li>";
+				}
+				obj.append(toAppend);
 			}
 		});
 	};
 })(jQuery);
 
-(function($){
-	$.fn.daPlugin2 = function(options) {
-		var defaults = {
-			digits: 3,
-			format: ".png",
-			numOfImages: 10,
-			path: "images/",
-			prefix: "",
-			postfix: ""
-		};
-
-		var options = $.extend(defaults, options);
-		options.path = options.path + options.prefix;
-		options.postfix = options.postfix + options.format;
-	
-		return this.each(function() {
-			var x = 1;
-			obj = $(this);
-		
-			while(x <= options.numOfImages){
-				if(x == 1)
-					obj.append('<img alt="" src="' + options.path + padZeros(x, options.digits) + options.postfix + '" />');
-				else
-					obj.append('<img alt="" src="' + options.path + padZeros(x, options.digits) + options.postfix + '" />');
-					
-				x++;
-			}
-		});
-	};
-})(jQuery);
-
+//Add '0' before num until it is >= len 
 function padZeros(num, len){
 	var result = '' + num;
 
