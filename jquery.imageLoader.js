@@ -1,5 +1,5 @@
 (function($){
-	$.fn.daPlugin = function(options) {
+	$.fn.imageLoader = function(options) {
 		var defaults = {
 			digits: 3,
 			format: ".png",
